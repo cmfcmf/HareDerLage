@@ -22,6 +22,9 @@ before_build:
 build_script:
   - cmd: godot.exe --no-window --export 'Windows Desktop' --path c:\game c:\game-build\game.exe
 
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 artifacts:
   - path: c:\game-build
 
