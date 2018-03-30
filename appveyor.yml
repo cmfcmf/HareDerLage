@@ -37,10 +37,10 @@ before_build:
   - ps: mv templates C:\Users\appveyor\AppData\Roaming\Godot\templates\3.0.2.stable
 
 build_script:
-  - cmd: godot.exe --no-window --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe
-  - cmd: godot.exe --no-window --path c:\game --export "Linux/X11"       c:\game-build\linux\game
-  - cmd: godot.exe --no-window --path c:\game --export "Mac OSX"         c:\game-build\mac\game
-  - cmd: godot.exe --no-window --path c:\game --export "HTML5"           c:\game-build\html\game.html
+  - cmd: godot.exe -v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe
+  - cmd: godot.exe -v --path c:\game --export "Linux/X11"       c:\game-build\linux\game
+  - cmd: godot.exe -v --path c:\game --export "Mac OSX"         c:\game-build\mac\game
+  - cmd: godot.exe -v --path c:\game --export "HTML5"           c:\game-build\html\game.html
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
