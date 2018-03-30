@@ -37,26 +37,21 @@ before_build:
   - ps: mv templates C:\Users\appveyor\AppData\Roaming\Godot\templates\3.0.2.stable
 
 build_script:
-  - ps: $program='godot.exe'
+  - ps: $program='c:\game-tmp\godot.exe'
   - ps: $timeout=60
-
-  - ps: $arguments='-v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe'
-  - ps: c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "Linux/X11"       c:\game-build\linux\game'
-  - ps: c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game'
-  - ps: c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\game.html'
-  - ps: c:\game\ci\run_with_timeout.ps1
+  - ps: $arguments='-v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe'; c:\game\ci\run_with_timeout.ps1
+  - ps: $arguments='-v --path c:\game --export "Linux/X11"       c:\game-build\linux\game';       c:\game\ci\run_with_timeout.ps1
+  - ps: $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game';         c:\game\ci\run_with_timeout.ps1
+  - ps: $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\game.html';   c:\game\ci\run_with_timeout.ps1
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 artifacts:
-  - path: c:\game-build\windows
-  - path: c:\game-build\linux
-  - path: c:\game-build\mac
-  - path: c:\game-build\html
+  - path: ..\game-build\windows
+  - path: ..\game-build\linux
+  - path: ..\game-build\mac
+  - path: ..\game-build\html
 
 deploy:
   - provider: GitHub
