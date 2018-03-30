@@ -1,7 +1,6 @@
 version: 1.0.{build}
 
-image: Visual Studio 2017 Preview
-platform: x86
+os: unstable
 
 branches:
   only:
