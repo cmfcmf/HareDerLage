@@ -82,5 +82,7 @@ deploy:
     artifact: /windows|linux|mac/
     draft: false
     prerelease: false
+    auth_token:
+      secure: yv0xyLQLnTDw5JBX0r5NdaBrHb4g9DyEmgIFhLysInvlZI1ZNUc6Qc+N9OdvieBP
     on:
       appveyor_repo_tag: true # deploy on tag push only
