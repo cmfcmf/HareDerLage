@@ -15,7 +15,7 @@ before_build:
   - cmd: cd c:\tmp
   - ps: Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_win64.exe.zip' -FileName godot.zip
   - cmd: 7z x godot.zip
-  - ps: mv Godot* godot.exe
+  - ps: mv Godot_v3.0.2-stable_win64.exe godot.exe
 
 build_script:
   - cmd: godot.exe --no-window --export 'HTML5' --path c:\game c:\game-build\index.html
