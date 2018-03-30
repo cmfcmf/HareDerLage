@@ -1,7 +1,5 @@
 version: 1.0.{build}
 
-platform: x64
-
 build:
   verbosity: minimal
 
@@ -14,10 +12,10 @@ clone_folder: c:\game
 
 before_build:
   - cmd: mkdir c:\game-build
-  - ps: Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_win64.exe.zip' -FileName godot.exe
+  - ps: Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_win32.exe.zip' -FileName godot.exe
 
 build_script:
-  - cmd: godot.exe --export 'HTML5' --path c:\game c:\game-build\index.html
+  - cmd: godot.exe --no-window --export 'HTML5' --path c:\game c:\game-build\index.html
 
 artifacts:
   - path: c:\game-build
