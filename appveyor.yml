@@ -15,7 +15,10 @@ init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 before_build:
-  - ps: mkdir c:\game-build
+  - ps: mkdir c:\game-build\windows
+  - ps: mkdir c:\game-build\linux
+  - ps: mkdir c:\game-build\mac
+  - ps: mkdir c:\game-build\html
   - ps: mkdir c:\game-tmp
   - ps: cd c:\game-tmp
   # Install OpenGL 3
@@ -34,17 +37,23 @@ before_build:
   - ps: mv templates C:\Users\appveyor\AppData\Roaming\Godot\templates\3.0.2.stable
 
 build_script:
-  - cmd: godot.exe --no-window --export "Windows Desktop" --path c:\game c:\game-build\game.exe
+  - cmd: godot.exe --no-window --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe
+  - cmd: godot.exe --no-window --path c:\game --export "Linux/X11"       c:\game-build\linux\game
+  - cmd: godot.exe --no-window --path c:\game --export "Mac OSX"         c:\game-build\mac\game
+  - cmd: godot.exe --no-window --path c:\game --export "HTML5"           c:\game-build\html\game.html
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 artifacts:
-  - path: c:\game-build
+  - path: c:\game-build\windows
+  - path: c:\game-build\linux
+  - path: c:\game-build\mac
+  - path: c:\game-build\html
 
 deploy:
   - provider: GitHub
-    artifact:
+    artifact: windows|linux|mac
     draft: false
     prerelease: false
     on:
