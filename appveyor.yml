@@ -1,7 +1,5 @@
 version: 1.0.{build}
 
-os: unstable
-
 branches:
   only:
     - master
@@ -10,7 +8,7 @@ branches:
 clone_folder: c:\game
 
 environment:
-  APPVEYOR_RDP_PASSWORD: game1game2game3
+  APPVEYOR_RDP_PASSWORD: 3e4z7t5gn64zou8fmwtrvgn
 
 # https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
 init:
