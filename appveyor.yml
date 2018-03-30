@@ -10,7 +10,7 @@ branches:
 clone_folder: c:\game
 
 environment:
-  - APPVEYOR_RDP_PASSWORD: game
+  APPVEYOR_RDP_PASSWORD: game
 
 # https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
 init:
