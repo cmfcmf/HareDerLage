@@ -52,7 +52,7 @@ build_script:
   - ps: $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game';         c:\game\ci\run_with_timeout.ps1
   - ps: $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\game.html';   c:\game\ci\run_with_timeout.ps1
   # Now move artifacts into project directory, which is required by AppVeyor.
-  - ps: mv c:\game-build c:\game\ci\build
+  - ps: mv c:\game-build\* c:\game\ci\build
 
 artifacts:
   - path: ci\build\windows
