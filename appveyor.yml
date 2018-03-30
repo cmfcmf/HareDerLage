@@ -23,36 +23,46 @@ on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 before_build:
-  - ps: mkdir c:\game-build\windows
-  - ps: mkdir c:\game-build\linux
-  - ps: mkdir c:\game-build\mac
-  - ps: mkdir c:\game-build\html
-  - ps: mkdir c:\game-tmp
-  - ps: cd c:\game-tmp
-  # Install OpenGL 3
-  - ps: Start-FileDownload 'https://sourceforge.net/projects/msys2/files/REPOS/MINGW/x86_64/mingw-w64-x86_64-mesa-17.0.0-1-any.pkg.tar.xz/download' -fileName opengl.tar.xz
-  - ps: 7z x opengl.tar.xz
-  - ps: 7z x opengl.tar
-  - ps: mv mingw64/bin/* .
-  # Install Godot
-  - ps: Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_win64.exe.zip'
-  - ps: 7z x Godot_v3.0.2-stable_win64.exe.zip
-  - ps: mv Godot_v3.0.2-stable_win64.exe godot.exe
-  # Install Godot export templates
-  - ps: Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_export_templates.tpz'
-  - ps: 7z x Godot_v3.0.2-stable_export_templates.tpz
-  - ps: mkdir        C:\Users\appveyor\AppData\Roaming\Godot\templates
-  - ps: mv templates C:\Users\appveyor\AppData\Roaming\Godot\templates\3.0.2.stable
+  - ps: |-
+        mkdir c:\game-build\windows
+        mkdir c:\game-build\linux
+        mkdir c:\game-build\mac
+        mkdir c:\game-build\html
+        mkdir c:\game-tmp
+        cd c:\game-tmp
 
+  # Install OpenGL 3
+  - ps: |-
+        Start-FileDownload 'https://sourceforge.net/projects/msys2/files/REPOS/MINGW/x86_64/mingw-w64-x86_64-mesa-17.0.0-1-any.pkg.tar.xz/download' -fileName opengl.tar.xz
+        7z x opengl.tar.xz
+        7z x opengl.tar
+        mv mingw64/bin/* .
+
+  # Install Godot
+  - ps: |-
+        Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_win64.exe.zip'
+        7z x Godot_v3.0.2-stable_win64.exe.zip
+        mv Godot_v3.0.2-stable_win64.exe godot.exe
+
+  # Install Godot export templates
+  - ps: |-
+        Start-FileDownload 'https://downloads.tuxfamily.org/godotengine/3.0.2/Godot_v3.0.2-stable_export_templates.tpz'
+        7z x Godot_v3.0.2-stable_export_templates.tpz
+        mkdir        C:\Users\appveyor\AppData\Roaming\Godot\templates
+        mv templates C:\Users\appveyor\AppData\Roaming\Godot\templates\3.0.2.stable
+
+# Export game for the different platforms
+# Then move generated artifacts into project directory, which is required by AppVeyor
+# to be able to mark them as artifacts.
 build_script:
-  - ps: $program='c:\game-tmp\godot.exe'
-  - ps: $timeout=30
-  - ps: $arguments='-v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe'; c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "Linux/X11"       c:\game-build\linux\game';       c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game';         c:\game\ci\run_with_timeout.ps1
-  - ps: $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\game.html';   c:\game\ci\run_with_timeout.ps1
-  # Now move artifacts into project directory, which is required by AppVeyor.
-  - ps: mv c:\game-build\* c:\game\ci\build
+  - ps: |-
+        $program='c:\game-tmp\godot.exe'
+        $timeout=30
+        $arguments='-v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe'; c:\game\ci\run_with_timeout.ps1
+        $arguments='-v --path c:\game --export "Linux/X11"       c:\game-build\linux\game';       c:\game\ci\run_with_timeout.ps1
+        $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game';         c:\game\ci\run_with_timeout.ps1
+        $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\index.html';  c:\game\ci\run_with_timeout.ps1
+        mv c:\game-build\* c:\game\ci\build
 
 artifacts:
   - path: ci\build\windows
