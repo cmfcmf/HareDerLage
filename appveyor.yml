@@ -10,9 +10,17 @@ clone_folder: c:\game
 platform: x64
 image: Visual Studio 2017
 
+# The following line can be enabled to allow a RDP connection to the machine
+# Connection details will be displayed in the build log.
+# Be aware that everyone who sees the log can connect to the machine.
+# If you want to keep the RDP connection open even after the last command
+# has run, enable the on_finish block as well.
 # https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 before_build:
   - ps: mkdir c:\game-build\windows
@@ -38,24 +46,27 @@ before_build:
 
 build_script:
   - ps: $program='c:\game-tmp\godot.exe'
-  - ps: $timeout=60
+  - ps: $timeout=30
   - ps: $arguments='-v --path c:\game --export "Windows Desktop" c:\game-build\windows\game.exe'; c:\game\ci\run_with_timeout.ps1
   - ps: $arguments='-v --path c:\game --export "Linux/X11"       c:\game-build\linux\game';       c:\game\ci\run_with_timeout.ps1
   - ps: $arguments='-v --path c:\game --export "Mac OSX"         c:\game-build\mac\game';         c:\game\ci\run_with_timeout.ps1
   - ps: $arguments='-v --path c:\game --export "HTML5"           c:\game-build\html\game.html';   c:\game\ci\run_with_timeout.ps1
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  # Now move artifacts into project directory, which is required by AppVeyor.
+  - ps: mv c:\game-build c:\game\ci\build
 
 artifacts:
-  - path: ..\game-build\windows
-  - path: ..\game-build\linux
-  - path: ..\game-build\mac
-  - path: ..\game-build\html
+  - path: ci\build\windows
+    name: windows
+  - path: ci\build\linux
+    name: linux
+  - path: ci\build\mac
+    name: mac
+  - path: ci\build\html
+    name: html
 
 deploy:
   - provider: GitHub
-    artifact: windows|linux|mac
+    artifact: /windows|linux|mac/
     draft: false
     prerelease: false
     on:

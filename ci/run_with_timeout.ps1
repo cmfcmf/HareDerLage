@@ -6,7 +6,7 @@ $proc = Start-Process -filePath $program -ArgumentList $arguments -PassThru
 $timeouted = $null # reset any previously set timeout
 
 # wait up to x seconds for normal termination
-$proc | Wait-Process -Timeout 60 -ea 0 -ev timeouted
+$proc | Wait-Process -Timeout $timeout -ea 0 -ev timeouted
 
 if ($timeouted)
 {
