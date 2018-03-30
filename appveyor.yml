@@ -9,6 +9,13 @@ branches:
 
 clone_folder: c:\game
 
+environment:
+  - APPVEYOR_RDP_PASSWORD: game
+
+# https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 before_build:
   - cmd: mkdir c:\game-build
   - cmd: mkdir c:\tmp
